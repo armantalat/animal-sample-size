@@ -1,0 +1,14 @@
+{
+  "name": "animal-sample-size",
+  "version": "1.0.0",
+  "description": "Free, open-source sample size calculator for animal studies (FA/EN)",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "test": "node --test tests/stats.test.js"
+  },
+  "dependencies": { "framer-motion": "^11.0.0", "react": "^18.3.1", "react-dom": "^18.3.1" },
+  "devDependencies": { "@vitejs/plugin-react": "^4.3.0", "vite": "^5.4.0", "vite-plugin-singlefile": "^2.0.0" }
+}
