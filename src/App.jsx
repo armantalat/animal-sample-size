@@ -66,7 +66,7 @@ function Cage({ res, t, fmt }) {
 
 function Field({ f, value, onChange, lang, t }) {
   if (f.type === "bool") {
-    const label = f.label === "nonpar" ? t.nonpar : f.label === "cc" ? t.cc : t.sacrifice;
+    const label = t.sacrifice;
     return (
       <label className="check">
         <input type="checkbox" checked={!!value} onChange={(e) => onChange(e.target.checked)} />
@@ -96,9 +96,9 @@ function Field({ f, value, onChange, lang, t }) {
 }
 
 function Calc({ lang, t, fmt }) {
-  const [mid, setMid] = useState("re");
+  const mid = "re";
   const [vals, setVals] = useState(() => Object.fromEntries(METHODS.map((m) => [m.id, Object.fromEntries(Object.entries(m.defaults).map(([k, v]) => [k, typeof v === "number" ? String(v) : v]))])));
-  const [glob, setGlob] = useState({ alpha: "0.05", power: "80", sides: 2, attr: "10" });
+  const [glob, setGlob] = useState({ attr: "10" });
   const [copied, setCopied] = useState(false);
   const m = METHODS.find((x) => x.id === mid);
   const v = vals[mid];
@@ -112,11 +112,8 @@ function Calc({ lang, t, fmt }) {
       if ((f.type === "num" || f.type === "int") && !(f.hide && f.hide(v)) && !Number.isFinite(parsed[f.key])) return null;
       if (f.type === "int" && f.min && !(f.hide && f.hide(v)) && parsed[f.key] < f.min) return null;
     }
-    const g = { alpha: num(glob.alpha), power: num(glob.power) / 100, sides: m.sidesFixed ? 2 : glob.sides, attr: num(glob.attr) || 0 };
-    if (!(g.alpha > 0 && g.alpha < 0.5 && g.power > 0.5 && g.power < 1 && g.attr >= 0 && g.attr < 90)) return null;
-    if (m.id === "t2" && !(parsed.sd > 0 && parsed.diff !== 0)) return null;
-    if (m.id === "paired" && !(parsed.sdDiff > 0 && parsed.diff !== 0)) return null;
-    if (m.id === "anova" && parsed.mode === "means" && !(parsed.sd > 0)) return null;
+    const g = { attr: num(glob.attr) || 0 };
+    if (!(g.attr >= 0 && g.attr < 90)) return null;
     try { const r = m.compute(parsed, g, lang); return r && Number.isFinite(r.total) && r.total < 1e6 ? r : null; } catch { return null; }
   }, [m, v, glob, lang]);
 
@@ -131,15 +128,6 @@ function Calc({ lang, t, fmt }) {
 
   return (
     <div className="grid-main">
-      <nav className="index" aria-label="designs">
-        {METHODS.map((x) => (
-          <button key={x.id} className={`tab ${x.id === mid ? "on" : ""}`} onClick={() => setMid(x.id)} type="button">
-            <span className="tname">{x.name[lang]}</span>
-            <span className="twhen">{x.when[lang]}</span>
-          </button>
-        ))}
-      </nav>
-
       <section className="inputs">
         <h2 className="mtitle">{m.name[lang]}</h2>
         <p className="mwhen">{m.when[lang]}</p>
@@ -149,26 +137,12 @@ function Calc({ lang, t, fmt }) {
           ))}
         </div>
         <div className="globals">
-          {m.usesPower && (
-            <div className="grow2">
-              <label className="field"><span className="flabel">{t.alpha}</span><input className="inp" dir="ltr" inputMode="decimal" value={glob.alpha} onChange={(e) => setGlob({ ...glob, alpha: e.target.value })} /></label>
-              <label className="field"><span className="flabel">{t.power} %</span><input className="inp" dir="ltr" inputMode="decimal" value={glob.power} onChange={(e) => setGlob({ ...glob, power: e.target.value })} /></label>
-            </div>
-          )}
-          {m.usesPower && !m.sidesFixed && m.id !== "detect" && (
-            <div className="field">
-              <span className="flabel">{t.sides}</span>
-              <div className="seg" role="radiogroup">
-                {[2, 1].map((s) => <button type="button" role="radio" aria-checked={glob.sides === s} key={s} className={glob.sides === s ? "on" : ""} onClick={() => setGlob({ ...glob, sides: s })}>{s === 2 ? t.two : t.one}</button>)}
-              </div>
-            </div>
-          )}
           <label className="field"><span className="flabel">{t.attr}</span><input className="inp" dir="ltr" inputMode="decimal" value={glob.attr} onChange={(e) => setGlob({ ...glob, attr: e.target.value })} /></label>
         </div>
       </section>
 
       <section className="card" aria-live="polite">
-        <div className="band"><span>{m.name[lang]}</span><span className="band-meta" dir="ltr">{m.usesPower ? `α ${glob.alpha} · 1−β ${glob.power}%` : "E = 10–20"}</span></div>
+        <div className="band"><span>{m.name[lang]}</span><span className="band-meta" dir="ltr">E = 10–20</span></div>
         {res ? (
           <div className="card-body">
             <div className="bignum-row">

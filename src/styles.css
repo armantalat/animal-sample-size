@@ -19,15 +19,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .topnav .lang { font-family: "Vazirmatn", "Source Sans 3"; min-width: 44px; color: #8a2410; }
 
 main { flex: 1; padding: 0 40px 32px; }
-.grid-main { display: grid; grid-template-columns: 250px minmax(300px, 1fr) minmax(380px, 470px); gap: 28px; align-items: start; }
-
-.index { display: flex; flex-direction: column; gap: 2px; position: sticky; top: 16px; }
-.tab { text-align: start; border: 0; background: transparent; padding: 11px 14px; border-radius: 10px; display: flex; flex-direction: column; gap: 2px; border-inline-start: 3px solid transparent; transition: background .15s; }
-.tab:hover { background: var(--soft); }
-.tab.on { background: var(--card); border-inline-start-color: var(--lead); box-shadow: 0 1px 3px rgb(29 39 64 / .08); }
-.tname { font-size: 16px; font-weight: 700; }
-.twhen { font-size: 14px; color: var(--muted); line-height: 1.45; }
-.tab:not(.on) .twhen { display: none; }
+.grid-main { display: grid; grid-template-columns: minmax(300px, 1fr) minmax(380px, 470px); gap: 28px; align-items: start; }
 
 .inputs { padding-top: 6px; }
 .mtitle { margin: 0; font-size: 30px; font-weight: 800; line-height: 1.2; }
@@ -96,14 +88,10 @@ main { flex: 1; padding: 0 40px 32px; }
 
 .foot { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 18px 40px 26px; font-size: 14px; color: var(--muted); border-top: 1px solid var(--rule); }
 
-@media (max-width: 1150px) { .grid-main { grid-template-columns: 220px 1fr; } .card { grid-column: 1 / -1; position: static; } }
+@media (max-width: 1150px) { .grid-main { grid-template-columns: 1fr; } .card { grid-column: 1 / -1; position: static; } }
 @media (max-width: 720px) {
   .top, main, .foot { padding-left: 18px; padding-right: 18px; }
   .grid-main { grid-template-columns: 1fr; }
-  .index { position: static; flex-direction: row; overflow-x: auto; gap: 6px; padding-bottom: 4px; }
-  .tab { flex: none; border-inline-start: 0; border-bottom: 3px solid transparent; }
-  .tab.on { border-bottom-color: var(--lead); }
-  .tab .twhen { display: none; }
   .bignum { font-size: 80px; }
   .brand h1 { font-size: 34px; }
 }
