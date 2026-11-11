@@ -129,8 +129,6 @@ function Calc({ lang, t, fmt }) {
   return (
     <div className="grid-main">
       <section className="inputs">
-        <h2 className="mtitle">{m.name[lang]}</h2>
-        <p className="mwhen">{m.when[lang]}</p>
         <div className="fields">
           {m.fields.filter((f) => !(f.hide && f.hide(v))).map((f) => (
             <Field key={f.key} f={f} value={v[f.key]} onChange={(val) => set(f.key, val)} lang={lang} t={t} />
